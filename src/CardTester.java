@@ -20,5 +20,7 @@ public class CardTester {
 		System.out.println(one.rank());
 		System.out.println(one.suit());
 		System.out.println(one.pointValue());
+
+		System.out.println(one.toString());
 	}
 }
