@@ -84,8 +84,7 @@ public class Deck {
 			size = 52;
 		}
 		size--;
-		Card c = cards.get(size);
-		return c;
+		return cards.get(size);
 	}
 
 	/**
