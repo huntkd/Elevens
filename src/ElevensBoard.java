@@ -11,6 +11,8 @@ public class ElevensBoard extends Board {
 	 */
 	private static final int BOARD_SIZE = 9;
 
+	private static final int SUM = 11;
+
 	/**
 	 * The ranks of the cards for this game to be sent to the deck.
 	 */
@@ -89,7 +91,7 @@ public class ElevensBoard extends Board {
 			int k1 = selectedCards.get(sk1).intValue();
 			for (int sk2 = sk1 + 1; sk2 < selectedCards.size(); sk2++) {
 				int k2 = selectedCards.get(sk2).intValue();
-				if (cardAt(k1).pointValue() + cardAt(k2).pointValue() == 11) {
+				if (cardAt(k1).pointValue() + cardAt(k2).pointValue() == SUM) {
 					return true;
 				}
 			}
