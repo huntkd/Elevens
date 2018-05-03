@@ -47,13 +47,20 @@ public class ThirteensBoard extends Board {
 	@Override
 	public boolean isLegal(List<Integer> selectedCards) {
 		/* *** TO BE MODIFIED IN ACTIVITY 11 *** */
-		if (selectedCards.size() == 1) {
-			return containsKing(selectedCards);
-		} else if (selectedCards.size() == 2) {
-			return containsPairSum13(selectedCards);
-		} else {
-			return false;
+		int[] idx1 = new int[2];
+		int[] idx2 = new int[1];
+		if (selectedCards.size() == 2) {
+			idx1 = findPairSum13(selectedCards);
+			if (idx1[0] != -1) {
+				return true;
+			}
+		} else if (selectedCards.size() == 1) {
+			idx2 = findK(selectedCards);
+			if (idx2[0] != -1) {
+				return true;
+			}
 		}
+		return false;
 	}
 
 	/**
@@ -66,8 +73,17 @@ public class ThirteensBoard extends Board {
 	@Override
 	public boolean anotherPlayIsPossible() {
 		/* *** TO BE MODIFIED IN ACTIVITY 11 *** */
+		int[] index1 = new int[2];
+		int[] index2 = new int[1];
 		List<Integer> cIndexes = cardIndexes();
-		return containsPairSum13(cIndexes) || containsKing(cIndexes);
+		index1 = findPairSum13(cIndexes);
+		index2 = findK(cIndexes);
+		if (index2[0] != -1) {
+			return true;
+		} else if (index1[0] != -1) {
+			return true;
+		}
+		return false;
 	}
 
 	/**
@@ -78,18 +94,22 @@ public class ThirteensBoard extends Board {
 	 * @return a list of the indexes of an 13-pair, if an 13-pair was found;
 	 *         an empty list, if an 13-pair was not found.
 	 */
-	private boolean containsPairSum13(List<Integer> selectedCards) {
+	private int[] findPairSum13(List<Integer> selectedCards) {
 		/* *** TO BE CHANGED INTO findPairSum13 IN ACTIVITY 11 *** */
+		int[] list = new int[2];
 		for (int sk1 = 0; sk1 < selectedCards.size(); sk1++) {
 			int k1 = selectedCards.get(sk1).intValue();
 			for (int sk2 = sk1 + 1; sk2 < selectedCards.size(); sk2++) {
 				int k2 = selectedCards.get(sk2).intValue();
 				if (cardAt(k1).pointValue() + cardAt(k2).pointValue() == 13) {
-					return true;
+					list[0] = k1;
+					list[1] = k2;
+					return list;
 				}
 			}
 		}
-		return false;
+		list[0] = -1;
+		return list;
 	}
 
 	/**
@@ -100,15 +120,18 @@ public class ThirteensBoard extends Board {
 	 * @return a list of the index of a king, if a king was found;
 	 *         an empty list, if a king was not found.
 	 */
-	private boolean containsKing(List<Integer> selectedCards) {
+	private int[] findK(List<Integer> selectedCards) {
 		/* *** TO BE CHANGED INTO findKing IN ACTIVITY 11 *** */
+		int[] list = new int[1];
 		for (Integer kObj : selectedCards) {
 			int k = kObj.intValue();
 			if (cardAt(k).rank().equals("king")) {
-				return true;
+				list[0] = k;
+				return list;
 			}
 		}
-		return false;
+		list[0] = -1;
+		return list;
 	}
 
 	/**
@@ -117,7 +140,7 @@ public class ThirteensBoard extends Board {
 	 */
 	public boolean playIfPossible() {
 		/* *** TO BE IMPLEMENTED IN ACTIVITY 11 *** */
-		return false; // REPLACE !
+		return playPairSum13IfPossible() || playKIfPossible(); 
 	}
 
 	/**
@@ -128,7 +151,18 @@ public class ThirteensBoard extends Board {
 	 */
 	private boolean playPairSum13IfPossible() {
 		/* *** TO BE IMPLEMENTED IN ACTIVITY 11 *** */
-		return false; // REPLACE !
+		List<Integer> cIndexes = cardIndexes();
+		int[] index = new int[2];
+		index = findPairSum13(cIndexes);
+		List<Integer> indexList = new ArrayList<Integer>();
+		for (int i : index) {
+			indexList.add(i);
+		}
+		if (index[0] != -1) {
+			replaceSelectedCards(indexList);
+			return true;
+		}
+		return false;
 	}
 
 	/**
@@ -137,8 +171,19 @@ public class ThirteensBoard extends Board {
 	 * The simulation of this game uses this method.
 	 * @return true if a king play was found (and made); false othewise.
 	 */
-	private boolean playKingIfPossible() {
+	private boolean playKIfPossible() {
 		/* *** TO BE IMPLEMENTED IN ACTIVITY 11 *** */
-		return false; // REPLACE !
+		List<Integer> cIndexes = cardIndexes();
+		int[] index = new int[3];
+		index = findK(cIndexes);
+		List<Integer> indexList = new ArrayList<Integer>();
+		for (int i : index) {
+			indexList.add(i);
+		}
+		if (index[0] != -1) {
+			replaceSelectedCards(indexList);
+			return true;
+		}
+		return false;
 	}
 }

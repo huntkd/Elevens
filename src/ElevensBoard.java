@@ -48,12 +48,16 @@ public class ElevensBoard extends Board {
 	@Override
 	public boolean isLegal(List<Integer> selectedCards) {
 		/* *** TO BE MODIFIED IN ACTIVITY 11 *** */
+		int[] idx1 = new int[2];
+		int[] idx2 = new int[3];
 		if (selectedCards.size() == 2) {
-			if (findPairSum11(selectedCards) != null) {
+			idx1 = findPairSum11(selectedCards);
+			if (idx1[0] != -1) {
 				return true;
 			}
 		} else if (selectedCards.size() == 3) {
-			if (findJQK(selectedCards) != null) {
+			idx2 = findJQK(selectedCards);
+			if (idx2[0] != -1) {
 				return true;
 			}
 		}
@@ -71,12 +75,17 @@ public class ElevensBoard extends Board {
 	@Override
 	public boolean anotherPlayIsPossible() {
 		/* *** TO BE MODIFIED IN ACTIVITY 11 *** */
+		int[] index1 = new int[2];
+		int[] index2 = new int[3];
 		List<Integer> cIndexes = cardIndexes();
-		// return containsPairSum11(cIndexes) || containsJQK(cIndexes);
-		if (findPairSum11(cIndexes) == null && findJQK(cIndexes) == null) {
-			return false;
-		} 
-		return true;
+		index1 = findPairSum11(cIndexes);
+		index2 = findJQK(cIndexes);
+		if (index2[0] != -1) {
+			return true;
+		} else if (index1[0] != -1) {
+			return true;
+		}
+		return false;
 	}
 
 	/**
@@ -95,12 +104,13 @@ public class ElevensBoard extends Board {
 			for (int sk2 = sk1 + 1; sk2 < selectedCards.size(); sk2++) {
 				int k2 = selectedCards.get(sk2).intValue();
 				if (cardAt(k1).pointValue() + cardAt(k2).pointValue() == 11) {
-					list[0] = selectedCards.get(k1);
-					list[1] = selectedCards.get(k2);
+					list[0] = k1;
+					list[1] = k2;
 					return list;
 				}
 			}
 		}
+		list[0] = -1;
 		return list;
 	}
 
@@ -115,7 +125,6 @@ public class ElevensBoard extends Board {
 	private int[] findJQK(List<Integer> selectedCards) {
 		/* *** TO BE CHANGED INTO findJQK IN ACTIVITY 11 *** */
 		int[] list = new int[3];
-		int[] nope = new int[3];
 		boolean foundJack = false;
 		boolean foundQueen = false;
 		boolean foundKing = false;
@@ -135,7 +144,8 @@ public class ElevensBoard extends Board {
 		if (foundJack && foundQueen && foundKing) {
 			return list;
 		} 
-		return nope;
+		list[0] = -1;
+		return list;
 	}
 
 	/**
@@ -144,12 +154,8 @@ public class ElevensBoard extends Board {
 	 */
 	public boolean playIfPossible() {
 		/* *** TO BE IMPLEMENTED IN ACTIVITY 11 *** */
-		if (anotherPlayIsPossible) {
-			
-		}
-		return false; // REPLACE !
+		return playPairSum11IfPossible() || playJQKIfPossible(); 
 	}
-
 	/**
 	 * Looks for a pair of non-face cards whose values sum to 11.
 	 * If found, replace them with the next two cards in the deck.
@@ -158,7 +164,18 @@ public class ElevensBoard extends Board {
 	 */
 	private boolean playPairSum11IfPossible() {
 		/* *** TO BE IMPLEMENTED IN ACTIVITY 11 *** */
-		 return false; // REPLACE !
+		List<Integer> cIndexes = cardIndexes();
+		int[] index = new int[2];
+		index = findPairSum11(cIndexes);
+		List<Integer> indexList = new ArrayList<Integer>();
+		for (int i : index) {
+			indexList.add(i);
+		}
+		if (index[0] != -1) {
+			replaceSelectedCards(indexList);
+			return true;
+		}
+		return false;
 	}
 
 	/**
@@ -169,6 +186,17 @@ public class ElevensBoard extends Board {
 	 */
 	private boolean playJQKIfPossible() {
 		/* *** TO BE IMPLEMENTED IN ACTIVITY 11 *** */
-		return false; // REPLACE !
+		List<Integer> cIndexes = cardIndexes();
+		int[] index = new int[3];
+		index = findJQK(cIndexes);
+		List<Integer> indexList = new ArrayList<Integer>();
+		for (int i : index) {
+			indexList.add(i);
+		}
+		if (index[0] != -1) {
+			replaceSelectedCards(indexList);
+			return true;
+		}
+		return false;
 	}
 }
